@@ -178,7 +178,14 @@ class ErgoMiner(ergoSettings: ErgoSettings,
     /**
       * Just ignore all other modifiers.
       */
-    case SemanticallySuccessfulModifier(_) =>
+    case SemanticallySuccessfulModifier(mod) =>
+
+      val ns = mod match {
+        case fb: ErgoFullBlock => s"needNewCandidate=${needNewCandidate(fb)}, shouldStartMine = ${shouldStartMine(fb)}"
+        case _ => ""
+      }
+
+      log.debug(s"Got unhandled modifier $mod in state isMining=$isMining, $ns")
   }
 
   override def receive: Receive =
